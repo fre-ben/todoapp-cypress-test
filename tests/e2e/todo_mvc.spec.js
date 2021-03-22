@@ -10,7 +10,7 @@ const ITEM2 = 'Save World';
 const ITEM3 = 'Get out of my house';
 
 const add3Items = () => {
-  // TODO
+  cy.get(TODO_CREATE).type('One{enter}').type('Two{enter}').type('Three{enter}');
 };
 
 describe('TODO MVC', () => {
@@ -18,11 +18,25 @@ describe('TODO MVC', () => {
     cy.visit('/');
   });
   describe('New todo', () => {
-    it('it should show headline "todos"');
-    it('it should create new todo');
-    it('it should create new todo that is not completed');
+    it('it should show headline "todos"', () => {
+      cy.contains('h1', 'todos');
+    });
+    it('it should create new todo', () => {
+      cy.get(TODO_CREATE).type('Remember the milk{enter}');
+      cy.get(TODO_NAME).should('contain', 'Remember the milk');
+    });
+    it('it should create new todo that is not completed', () => {
+      cy.get(TODO_CREATE).type('Remember the milk{enter}');
+      cy.get(TODO_NAME).should('contain', 'Remember the milk');
+      cy.get(TODO_ITEM).should('have.class', '');
+      cy.get(TODO_ITEM).should('not.have.class', 'completed');
+    });
 
-    it('it should create 3 new todos (verify number and last entry)');
+    it('it should create 3 new todos (verify number and last entry)', () => {
+      add3Items();
+      cy.get(TODO_NAME).should('have.length', 3);
+      cy.get(TODO_ITEM).last().should('contain.text', 'Three');
+    });
     it('it should show correct todo count)');
   });
 
